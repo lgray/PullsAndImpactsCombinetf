@@ -126,6 +126,7 @@ def parseArgs():
     parser.add_argument("-g", "--group", action='store_true', help="Show impacts of groups")
     parsers = parser.add_subparsers(dest='mode')
     interactive = parsers.add_parser("interactive", help="Launch and interactive dash session")
+    interactive.add_argument("-i", "--interface", default="localhost", help="The network interface to bind to.")
     output = parsers.add_parser("output", help="Produce plots as output (not interactive)")
     output.add_argument("-o", "--outputFile", default="test.html", type=str, help="Output file (extension specifies if html or pdf/png)")
     output.add_argument("-n", "--num", default=20, type=str, help="Number of nuisances to plot")
@@ -200,7 +201,7 @@ if __name__ == '__main__':
             },
         )
 
-        app.run_server(debug=True, port=3389, host='0.0.0.0')
+        app.run_server(debug=True, port=3389, host=args.interface)
     elif args.mode == 'output':
         df = dataframe if not args.group else groupsdataframe
         fig = plotImpacts(df[:-1], title=args.title, pulls=not args.noPulls and not args.group, pullrange=[-5,5])
